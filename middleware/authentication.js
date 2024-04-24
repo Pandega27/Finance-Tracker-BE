@@ -7,7 +7,7 @@ const authenticateToken = (req, res, next) => {
 
     if (token == null) return res.sendStatus(401);
 
-    // Check the token validation
+    // Check the JSON web token validation
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) return res.sendStatus(403); 
         req.user = user;

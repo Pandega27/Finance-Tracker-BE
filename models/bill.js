@@ -21,7 +21,16 @@ const billSchema = new mongoose.Schema({
     isPaid: {
         type: Boolean,
         default: false
+    },
+    createdDate: { 
+        type: Date,
+        default: Date.now 
+    },
+    paidDate: { 
+        type: Date,
+        default: null 
     }
+
 });
 
 const Bill = mongoose.model('Bill', billSchema);

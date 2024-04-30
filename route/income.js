@@ -1,12 +1,9 @@
-// income.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const authenticateToken = require('../middleware/authentication');
 
-// Existing balance retrieval route is already here...
-
-// Route to deposit (add) to the user's balance
+// add
 router.post('/plus', authenticateToken, async (req, res) => {
     const { amount } = req.body;
 
@@ -20,7 +17,7 @@ router.post('/plus', authenticateToken, async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
-        user.balance += amount; // Add the amount to the user's balance
+        user.balance += amount;
         await user.save();
         res.json({ message: "Balance successfully increased.", balance: user.balance });
     } catch (error) {
@@ -29,7 +26,7 @@ router.post('/plus', authenticateToken, async (req, res) => {
     }
 });
 
-// Route to withdraw (subtract) from the user's balance
+// subtract
 router.post('/minus', authenticateToken, async (req, res) => {
     const { amount } = req.body;
 
@@ -47,7 +44,7 @@ router.post('/minus', authenticateToken, async (req, res) => {
             return res.status(400).json({ message: "Insufficient funds." });
         }
 
-        user.balance -= amount; // Subtract the amount from the user's balance
+        user.balance -= amount;
         await user.save();
         res.json({ message: "Balance successfully decreased.", balance: user.balance });
     } catch (error) {

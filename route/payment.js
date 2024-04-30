@@ -56,6 +56,7 @@ router.post('/pay/:billId', authenticateToken, async (req, res) => {
         }
 
         bill.isPaid = true;
+        bill.paidDate = new Date(); 
         await bill.save({ session });
 
         const transaction = new Transaction({
@@ -63,7 +64,7 @@ router.post('/pay/:billId', authenticateToken, async (req, res) => {
             billId: bill._id,
             type: 'billPayment',
             amount: bill.amount,
-            date: new Date() // current date and time
+            date: new Date()
         });
         await transaction.save({ session });
 
@@ -79,5 +80,6 @@ router.post('/pay/:billId', authenticateToken, async (req, res) => {
         session.endSession();
     }
 });
+
 
 module.exports = router;

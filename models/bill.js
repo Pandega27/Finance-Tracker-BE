@@ -29,9 +29,14 @@ const billSchema = new mongoose.Schema({
     paidDate: { 
         type: Date,
         default: null 
+    },
+    category: {
+        type: String,
+        enum: ['Others', 'Utilities', 'Lifestyle', 'Transport', 'Entertainment'],
+        default: 'Others'
     }
-
 });
+
 
 const Bill = mongoose.model('Bill', billSchema);
 module.exports = Bill;

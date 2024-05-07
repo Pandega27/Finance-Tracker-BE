@@ -5,6 +5,7 @@ const { db } = require('./db/db');
 const cors = require('cors');
 
 //Route the files
+
 const app = express();
 const User = require('./models/user');
 const userRoutes = require('./route/account');
@@ -12,7 +13,7 @@ const incomeRoutes = require('./route/income');
 const listBillsRoutes = require('./route/listBills');
 const paymentRoutes = require('./route/payment');
 require('dotenv').config()
-
+const newBillRoutes = require('./route/newBill');
 const PORT = process.env.PORT
 
 // middlewares
@@ -22,7 +23,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/income', incomeRoutes);
 app.use('/api/bills', listBillsRoutes);
 app.use('/api/payments', paymentRoutes);
-
+app.use('/api/bills', newBillRoutes);
 //listen at
 const server = () =>{
     db()

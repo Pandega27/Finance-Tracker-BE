@@ -6,35 +6,22 @@ const User = require('../models/user');
 const Transaction = require('../models/transaction');
 const authenticateToken = require('../middleware/authentication');
 
-//create a new bill
-router.post('/create', authenticateToken, async (req, res) => {
-    const { description, amount, dueDate } = req.body;
-    const newBill = new Bill({
-        userId: req.user.id,
-        description,
-        amount,
-        dueDate
-    });
 
-    try {
-        const savedBill = await newBill.save();
-        res.status(201).json(savedBill);
-    } catch (error) {
-        res.status(400).json({ message: "Error saving the bill", error: error.message });
-    }
-});
-
-//retrieve all bills for a user
+// Retrieve all bills for a user
 router.get('/:userId', authenticateToken, async (req, res) => {
     try {
-        const bills = await Bill.find({ userId: req.params.userId });
-        res.json(bills);
+        const bills = await Bill.find({ userId: req.params.userId }).select('description amount dueDate isPaid category createdDate paidDate');
+        res.json(bills.map(bill => ({
+            ...bill.toJSON(),
+            categoryName: bill.category
+        })));
     } catch (error) {
         res.status(500).json({ message: "Error fetching bills", error: error.message });
     }
 });
 
-// pay a bill
+
+// Pay a bill
 router.post('/pay/:billId', authenticateToken, async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -56,7 +43,7 @@ router.post('/pay/:billId', authenticateToken, async (req, res) => {
         }
 
         bill.isPaid = true;
-        bill.paidDate = new Date(); 
+        bill.paidDate = new Date();
         await bill.save({ session });
 
         const transaction = new Transaction({
@@ -64,7 +51,8 @@ router.post('/pay/:billId', authenticateToken, async (req, res) => {
             billId: bill._id,
             type: 'billPayment',
             amount: bill.amount,
-            date: new Date()
+            date: new Date(),
+            category: bill.category // Include category in transaction details
         });
         await transaction.save({ session });
 
@@ -72,7 +60,7 @@ router.post('/pay/:billId', authenticateToken, async (req, res) => {
         await user.save({ session });
 
         await session.commitTransaction();
-        res.json({ message: "Bill paid successfully" });
+        res.json({ message: "Bill paid successfully", details: bill });
     } catch (error) {
         await session.abortTransaction();
         res.status(400).json({ message: "Error paying the bill", error: error.message });

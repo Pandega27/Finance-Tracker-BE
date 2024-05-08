@@ -6,7 +6,7 @@ const authenticateToken = require('../middleware/authentication');
 
 router.get('/byCategory', authenticateToken, async (req, res) => {
     try {
-        const userId = new mongoose.Types.ObjectId(req.user.id);  // Correctly instantiate ObjectId
+        const userId = new mongoose.Types.ObjectId(req.user.id); 
 
         const aggregatedData = await Bill.aggregate([
             { $match: { userId: userId, isPaid: true } },

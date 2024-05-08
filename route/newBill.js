@@ -5,6 +5,7 @@ const authenticateToken = require('../middleware/authentication');
 
 // POST route to add a new bill
 router.post('/add', authenticateToken, async (req, res) => {
+    console.log("Adding new bill:", req.body);
     const { description, amount, dueDate, category } = req.body;
     const newBill = new Bill({
         userId: req.user.id,
@@ -21,5 +22,6 @@ router.post('/add', authenticateToken, async (req, res) => {
         res.status(400).json({ message: "Error saving the bill", error: error.message });
     }
 });
+
 
 module.exports = router;

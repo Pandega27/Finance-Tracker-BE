@@ -52,7 +52,7 @@ router.post('/pay/:billId', authenticateToken, async (req, res) => {
             type: 'billPayment',
             amount: bill.amount,
             date: new Date(),
-            category: bill.category // Include category in transaction details
+            category: bill.category 
         });
         await transaction.save({ session });
 

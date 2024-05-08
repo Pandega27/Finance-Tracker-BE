@@ -13,7 +13,10 @@ const incomeRoutes = require('./route/income');
 const listBillsRoutes = require('./route/listBills');
 const paymentRoutes = require('./route/payment');
 require('dotenv').config()
+
 const newBillRoutes = require('./route/newBill');
+const spendingRoutes = require('./route/spending');
+
 const PORT = process.env.PORT
 
 // middlewares
@@ -24,6 +27,8 @@ app.use('/api/income', incomeRoutes);
 app.use('/api/bills', listBillsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/bills', newBillRoutes);
+app.use('/api/spending', spendingRoutes);
+
 //listen at
 const server = () =>{
     db()

@@ -22,6 +22,11 @@ const transactionSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    category: {
+        type: String,
+        enum: ['Others', 'Utilities', 'Lifestyle', 'Transport', 'Entertainment'],
+        default: 'Others'
     }
 });
 

@@ -22,12 +22,10 @@ router.post('/login', async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid password' });
         }
-
-        // User matched, create JWT
         const token = jwt.sign(
             { id: user._id, username: user.username },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '5h' }
         );
 
         res.json({ token: token, message: "Login Successful" });
@@ -50,11 +48,7 @@ router.post('/register', async (req, res) => {
         if (existingUser) {
             return res.status(409).json({ message: 'Username or email already exists' });
         }
-
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create and save the user
         const user = new User({ username, email, password: hashedPassword });
         await user.save();
 
